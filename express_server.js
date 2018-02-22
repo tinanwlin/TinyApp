@@ -3,6 +3,7 @@ var app = express();
 var PORT = process.env.PORT || 8080; // default port 8080
 const bodyParser = require("body-parser");
 
+//middleware
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));  //ORDER????
 
@@ -15,7 +16,6 @@ function generateRandomString() {
   }
   return text;
 }
-
 
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -30,7 +30,7 @@ app.get("/", (req, res) => {
 app.get("/urls", (req, res) => {
   console.log('/urls get:')
   let templateVars = { urls: urlDatabase };  // temp = { 
-    console.log(templateVars)
+  console.log(templateVars)
   res.render("urls_index", templateVars);  //         urls: {"key": "value"} }
 });
 
@@ -45,7 +45,7 @@ app.post("/urls", (req, res) => {
   console.log("post:")
   var generateFun = generateRandomString();
   urlDatabase[generateFun] = req.body.longURL;
-  console.log('newURL', req.body);  
+  console.log('newURL', req.body);
   console.log('newURL', req.body.longURL);
   console.log(urlDatabase);
   console.log("redirect:")
@@ -80,7 +80,7 @@ app.get("/urls/:id", (req, res) => {
 app.post("/urls/:id/delete", (req, res) => {
   console.log("delete")
   console.log(req.params)
-  var deleteshortURL = req.params.id; 
+  var deleteshortURL = req.params.id;
   delete urlDatabase[deleteshortURL];
   res.redirect("/urls");
 });
@@ -91,7 +91,7 @@ app.post("/urls/:id", (req, res) => {
   console.log("update")
   console.log("params:", req.params)
   console.log("body:", req.body)
-  var updateURL = req.params.id; 
+  var updateURL = req.params.id;
   urlDatabase[updateURL] = req.body.shortURL;
   console.log(updateURL);
   res.redirect("/urls");
