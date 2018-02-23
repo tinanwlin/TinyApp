@@ -1,21 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-  <%- include('partials/_header') %>
-  </head>
-<body>
-   <h2 style="color:cadetblue">Home Page 🏖</h2>
+<html lang=“en”>
 
-   <% for (var key in urls) { %>
-   <li><%= key %> : <%= urls[key] %></li>
-      <a href="/urls/<%= key %>">Edit</a> 
+<head>
+  <meta charset="utf-8">
+  <title>TinyApp</title>
+</head>
+
+
+<body>
+  <%- include('partials/_header') %>
+    <br/>
+    <% for (var key in urls) { %>
+      <li>
+        <%= key %> : <%= urls[key] %>
+      </li>
+      <a href="/urls/<%= key %>">Edit</a>
       <form method="POST" action="urls/<%= key %>/delete">
-      <button type="submit">Delete</button> 
-     </form>
-   <% } %>
-<br/>
-  <a href="/urls/new">Create a New Short Link</a>
+        <button type="submit">Delete</button>
+      </form>
+      <% } %>
+        <br/>
+        <a href="/urls/new">Create a New Short Link</a>
 
 
 </body>
+
 </html>
