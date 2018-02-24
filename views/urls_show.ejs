@@ -13,7 +13,7 @@
   <h4>ShortURL: <%= shortURL %></h4>
       
       <form method="POST" action="/urls/<%= shortURL %>">
-        <label>Update longURL Here</label>
+        <label for="shortURL">Update longURL Here</label>
         <input id="shortURL" type="text" name="shortURL" placeholder="http://"></input>
         <button type="submit">Update</button>
       </form>

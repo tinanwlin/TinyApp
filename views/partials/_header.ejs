@@ -9,17 +9,21 @@
 <body>
   <h2 style="color:cadetblue">TinyApp 🏖</h2>
 
-  <% if(username) { %>
-    <%= username %>
+  <% if(user) { %>
+    <div>Hello, <%= user.id %></div>
       <form method="POST" action="/logout">
         <button type="submit">Logout</button>
-        </form>
-        <% } else { %>
-          <form method="POST" action="/login">
-            <input type="text" name="username"></input>
-            <button type="submit">Login</button>
-          </form>
-          <%  } %>
-          
+      </form>
+      <% } else { %>
+        <p><form method="GET" action="/login">
+          <button type="submit">Login</button>
+          </form></p>
+        <p><form method="GET" action="/register">
+          <button type="submit">Register</button>
+          </form></p>
+        <%  } %>
+
+
 </body>
+
 </html>
