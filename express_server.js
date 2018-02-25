@@ -91,16 +91,22 @@ app.get("/urls", (req, res) => {
       user: users[req.cookies.user_id]
     };
   }
-
   res.render("urls_index", templateVars);
 });
 
 //2nd route post
 app.get("/urls/new", (req, res) => { //if statement if the user id match???
   let templateVars = {
-    user: users[req.cookies.user_id]
+    user: null
   };
-  res.render("urls_new", templateVars);//+++UNDEFINDED
+  if (req.cookies.user_id) {
+    templateVars = {
+    user: users[req.cookies.user_id]
+  }
+ res.render("urls_new", templateVars);
+  } else {
+    res.redirect("/login");
+  }
 });
 
 app.post("/urls", (req, res) => {
