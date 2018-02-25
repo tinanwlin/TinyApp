@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html lang=“en”>
 
-<head>
-  <meta charset="utf-8">
-  <title>TinyApp</title>
-</head>
-
-<body>
   <h2 style="color:cadetblue">TinyApp 🏖</h2>
 
   <% if(user) { %>
-    <div>Hello, <%= user.id %></div>
+    <div>Hello, <%= user.email %></div>
       <form method="POST" action="/logout">
         <button type="submit">Logout</button>
       </form>
@@ -22,8 +14,3 @@
           <button type="submit">Register</button>
           </form></p>
         <%  } %>
-
-
-</body>
-
-</html>
