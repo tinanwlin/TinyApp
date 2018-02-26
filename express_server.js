@@ -115,9 +115,21 @@ app.post("/urls", (req, res) => {
   res.redirect("/urls/" + generateFun);
 });
 
+//function helper
+function flatenUrlDatabase(urlDatabase){
+  var newUrlDatabase = {};
+  for (var userId in urlDatabase){
+    for (var shortURL in urlDatabase[userId]){
+      newUrlDatabase[shortURL] = urlDatabase[userId][shortURL];
+    }
+  }
+  return newUrlDatabase;
+}
 
 app.get("/u/:shortURL", (req, res) => {
-  let longURL = urlDatabase[req.params.shortURL];
+  var newUrlDatabase = flatenUrlDatabase(urlDatabase);
+  var longURL = newUrlDatabase[req.params.shortURL];
+  
   if (!longURL) {
     res.status(404);
     res.send("Not Found");
