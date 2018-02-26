@@ -4,31 +4,26 @@
 <head>
   <meta charset="utf-8">
   <title>TinyApp</title>
-  <style>
-  
-  
-  </style>
 </head>
 
 
 <body>
-
   <%- include('partials/_header') %>
-
-    
-    <br/>
-    <% if (user) { %>
-    <% for (var key in urls) { %>
-            <li>
-              <%= [key] %> : <%= urls[key] %>
-              <a href="/urls/<%=key%>"/>Update</a> | <a href="/urls/<%=key%>/delete">Delete</a>
-            </li>
+   
+ <br/>
+  <% if (user) { %>  
+   <% for (var key in urls) { %>
+   <li>
+    <%= [key] %> : <%= urls[key] %>
+    <a href="/urls/<%=key%>"/>Update</a> | <a href="/urls/<%=key%>/delete">Delete</a>
+  </li>
     <% } %>   
-      <br/>
-      <a href="/urls/new">Create a New Short Link</a>
-    <%  } else { %>
-      <p>To access this page (/urls) you must log in or register a new account</p>
+    <br/>
+    <a href="/urls/new">Create a New Short Link</a>
+  <% } else { %>
+    <p>To access this page (/urls) you must log in or register a new account</p>
     <% } %>
+
 </body>
 
 </html>

@@ -3,22 +3,20 @@ var app = express();
 var PORT = process.env.PORT || 8080; // default port 8080
 var bodyParser = require("body-parser");
 var bcrypt = require('bcrypt');
-var cookieSession = require('cookie-session')
+var cookieSession = require('cookie-session');
 
 
 //middleware
 app.set("view engine", "ejs");
-app.use(bodyParser.urlencoded({ extended: true }));  //ORDER????
+app.use(bodyParser.urlencoded({ extended: true }));  
 app.use(cookieSession({
   secret: "wowihaveasuperlongsecretkey"
-  // maxAge: 24 * 60 * 60 * 1000 // 24 hours
-}))
+}));
 
-//function helper
+//helper functions
 function generateRandomString() {
   var text = "";
   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
   for (var i = 0; i < 6; i++) {
     text += possible.charAt(Math.floor(Math.random() * possible.length));
   }
@@ -45,12 +43,37 @@ function urlsForUser(id) {
   }
   return result;
 }
-// a new database with {short: sss, long:ddd, userID: (=ID)}
+
+function flatenUrlDatabase(urlDatabase){
+  var newUrlDatabase = {};
+  for (var userId in urlDatabase){
+    for (var shortURL in urlDatabase[userId]){
+      newUrlDatabase[shortURL] = urlDatabase[userId][shortURL];
+    }
+  }
+  return newUrlDatabase;
+}
+
+function authenticateUser(email, password) {
+  var isAuthenticated = false;
+  var result;
+  for (var key in users) {
+    if ((users[key].email === email) && bcrypt.compareSync(password, users[key].password)) {
+      isAuthenticated = true;
+      result = key;
+      break;
+    }
+  }
+  if (isAuthenticated) {
+    return users[result]
+  } else {
+    return false;
+  }
+}
 
 var urlDatabase = {
   "orange": {
     "b2xVn2": "http://www.lighthouselabs.ca",
-
   },
   "banana": {
     "9sm5xK": "http://www.facebook.ca",
@@ -71,7 +94,7 @@ var users = {
 };
 
 
-app.get("/", (req, res) => {//urls & login
+app.get("/", (req, res) => {
   if (req.session.user_id){
     res.redirect("/urls");
   } else {
@@ -115,25 +138,13 @@ app.post("/urls", (req, res) => {
   var generateFun = generateRandomString();
   if (urlsForUser(req.session.user_id)) {
     urlDatabase[req.session.user_id][generateFun] = req.body.longURL;
-  };
+  }
   res.redirect("/urls/" + generateFun);
 });
-
-//function helper
-function flatenUrlDatabase(urlDatabase){
-  var newUrlDatabase = {};
-  for (var userId in urlDatabase){
-    for (var shortURL in urlDatabase[userId]){
-      newUrlDatabase[shortURL] = urlDatabase[userId][shortURL];
-    }
-  }
-  return newUrlDatabase;
-}
 
 app.get("/u/:shortURL", (req, res) => {
   var newUrlDatabase = flatenUrlDatabase(urlDatabase);
   var longURL = newUrlDatabase[req.params.shortURL];
-  
   if (!longURL) {
     res.status(404);
     res.send("Not Found");
@@ -142,7 +153,6 @@ app.get("/u/:shortURL", (req, res) => {
   }
 });
 
-//delete a shortURL
 app.get("/urls/:id/delete", (req, res) => {
   var deleteshortURL = req.params.id;
   if (req.session.user_id) {
@@ -153,26 +163,24 @@ app.get("/urls/:id/delete", (req, res) => {
   }
 });
 
-
-//new add for shortened form 
-app.get("/urls/:id", (req, res) => {   //template changed
+app.get("/urls/:id", (req, res) => {   
   let templateVars = {
       shortURL: "",
       user: null,
       state: "NOT_EXIST"
-  }
+  };
   if (req.session.user_id) {
       templateVars.shortURL = req.params.id;
       templateVars.user = users[req.session.user_id];
-  } 
+  }
   templateVars.state = "NOT_EXIST"; 
   for (var userId in urlDatabase) {
     for (var short in urlDatabase[userId]) {
         // exist and belongs to someone
         if (short === req.params.id){
-          templateVars.state = "AUTHED"
+          templateVars.state = "AUTHED";
             if (userId !== req.session.user_id){
-              templateVars.state = "NO_AUTH"
+              templateVars.state = "NO_AUTH";
             }
         }
     }
@@ -180,7 +188,6 @@ app.get("/urls/:id", (req, res) => {   //template changed
   res.render("urls_show", templateVars);
 });
 
-//update URL
 app.post("/urls/:id", (req, res) => {
   var shortURL = req.params.id;
   if (req.session.user_id) {
@@ -193,24 +200,7 @@ app.post("/urls/:id", (req, res) => {
 
 app.get("/login", (req, res) => {
   res.render("urls_login");
-})
-//function helper
-function authenticateUser(email, password) {
-  var isAuthenticated = false;
-  var result;
-  for (var key in users) {
-    if ((users[key].email === email) && bcrypt.compareSync(password, users[key].password)) {
-      isAuthenticated = true;
-      result = key;
-      break;
-    }
-  }
-  if (isAuthenticated) {
-    return users[result]
-  } else {
-    return false;
-  }
-}
+});
 
 app.post("/login", (req, res) => { 
   var result = authenticateUser(req.body.email, req.body.password);
@@ -222,7 +212,6 @@ app.post("/login", (req, res) => {
     res.send("Incorrect Username or Password");
   }
 });
-
 
 app.post("/logout", (req, res) => {
   req.session = null;
@@ -249,7 +238,6 @@ app.post("/register", (req, res) => {
       password: hash
     };
     users[newUser.id] = newUser;
-    console.log("password: ", newUser.password);
     req.session.user_id = newUser.id;
     urlDatabase[req.session.user_id] = {};
     res.redirect("/urls");

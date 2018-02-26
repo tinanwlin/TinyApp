@@ -1,28 +1,31 @@
 <style>
-  nav{
-    background:#baffce;
+  nav {
+    background: #baffce;
     padding: 0 10px;
-    display:flex;
-    align-items:center;
+    display: flex;
+    align-items: center;
     justify-content: space-between;
   }
-  ul{
-    display:flex;
-  }
-  li{
-    margin:0 10px;
-    list-style:none;
+
+  ul {
+    display: flex;
   }
 
-  button{
-    color:cadetblue;
-    text-decoration:none;
-    display:block;
-    text-transform:uppercase;
+  li {
+    margin: 0 10px;
+    list-style: none;
   }
-  button:hover{
-    color:white;
-    background:#34696b;
+
+  button {
+    color: cadetblue;
+    text-decoration: none;
+    display: block;
+    text-transform: uppercase;
+  }
+
+  button:hover {
+    color: white;
+    background: #34696b;
   }
 </style>
 
@@ -34,25 +37,26 @@
 
   <ul>
     <% if(user) { %>
-      <li>Hello, <%= user.email %></li>
+      <li>Hello,
+        <%= user.email %>
+      </li>
       <form method="POST" action="/logout">
         <button type="submit">Logout</button>
       </form>
-    <% } else { %>
-      <li>
-        <form method="GET" action="/login">
-          <button type="submit">Login</button>
-        </form>
-      </li>
-      <li>
-        <form method="GET" action="/register">
-          <button type="submit">Register</button>
-        </form>
-      </li>
+      <% } else { %>
+        <li>
+          <form method="GET" action="/login">
+            <button type="submit">Login</button>
+          </form>
+        </li>
+        <li>
+          <form method="GET" action="/register">
+            <button type="submit">Register</button>
+          </form>
+        </li>
 
-      
-    <% } %>
+
+        <% } %>
   </ul>
 
 </nav>
-

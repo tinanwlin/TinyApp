@@ -18,16 +18,16 @@
         <% } else if (state === "NO_AUTH"){ %>
           <p>This shortURL belongs to other user</p>
           <% } else if (state === "AUTHED"){ %>
-            <h4>ShortURL:<%= shortURL %></h4>
+            <h4>ShortURL: <%= shortURL %></h4>
             <form style="display:flex;align-items:center" method="POST" action="/urls/<%= shortURL %>">
               <label>Update longURL Here</label>
               <input type="text" name="longURL" placeholder="http://"></input>
               <button type="submit">Update</button>
             </form>
-      <% } %> 
-      <% } else { %>
-      <p>To access this page (/urls/:id) you must log in or register a new account</p>
-    <% } %>
+            <% } %>
+              <% } else { %>
+                <p>To access this page (/urls/:id) you must log in or register a new account</p>
+                <% } %>
 </body>
 
 </html>
