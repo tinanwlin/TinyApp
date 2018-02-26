@@ -8,16 +8,26 @@
 
 <body>
   <%- include('partials/_header') %>
-  <h2 style="color:khaki">ShortURL and LongURL</h2>
-  <br/>
-  <h4>ShortURL: <%= shortURL %></h4>
-      
-      <form method="POST" action="/urls/<%= shortURL %>">
-        <label >Update longURL Here</label>
-        <input type="text" name="longURL" placeholder="http://"></input>
-        <button type="submit">Update</button>
-      </form>
 
+
+    <% if (user) { %>
+      <h2 style="color:khaki">ShortURL and LongURL</h2>
+      <br/>
+      <% if (state === "NOT_EXIST") { %>
+        <p>This shortURL does not exist</p>
+        <% } else if (state === "NO_AUTH"){ %>
+          <p>This shortURL belongs to other user</p>
+          <% } else if (state === "AUTHED"){ %>
+            <h4>ShortURL:<%= shortURL %></h4>
+            <form method="POST" action="/urls/<%= shortURL %>">
+              <label>Update longURL Here</label>
+              <input type="text" name="longURL" placeholder="http://"></input>
+              <button type="submit">Update</button>
+            </form>
+      <% } %> 
+      <% } else { %>
+      <p>To access this page (/urls/:id) you must log in.</p>
+    <% } %>
 </body>
 
 </html>

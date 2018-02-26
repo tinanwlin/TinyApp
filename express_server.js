@@ -79,10 +79,9 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
-
 app.get("/urls", (req, res) => { 
   let templateVars = {
-    urls: [],
+    urls: {},
     user: null
   };
   if (req.cookies.user_id) {
@@ -94,7 +93,6 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
-//2nd route post
 app.get("/urls/new", (req, res) => { //if statement if the user id match???
   let templateVars = {
     user: null
@@ -102,7 +100,7 @@ app.get("/urls/new", (req, res) => { //if statement if the user id match???
   if (req.cookies.user_id) {
     templateVars = {
     user: users[req.cookies.user_id]
-  }
+  };
  res.render("urls_new", templateVars);
   } else {
     res.redirect("/login");
@@ -114,9 +112,6 @@ app.post("/urls", (req, res) => {
   if (urlsForUser(req.cookies.user_id)) {
     urlDatabase[req.cookies.user_id][generateFun] = req.body.longURL;
   };
-  console.log("the function find user:", urlsForUser(req.cookies.user_id))
-  console.log("/urls: cookiesID", req.cookies.user_id)
-  console.log("urlDatabase:", urlDatabase)
   res.redirect("/urls/" + generateFun);
 });
 
@@ -140,22 +135,30 @@ app.get("/urls/:id/delete", (req, res) => {
 
 
 //new add for shortened form 
-app.get("/urls/:id", (req, res) => {
-  if (req.cookies.user_id) {
-    var templateVars = {
-      shortURL: req.params.id,
-      user: users[req.cookies.user_id]
-    }
-    // var shortURL = req.params.id;
-    // if (urlsForUser(req.cookies.user_id)) {
-    // urlDatabase[req.cookies.user_id][shortURL] = urlDatabase[req.params.id],
-    res.render("urls_show", templateVars);
-  } else {
-    // console.log("cookieID:", req.cookies.user_id)
-    // console.log("shortURL:", shortURL)
-    // console.log("urlDatabase:", urlDatabase)
-    res.redirect("/register") //???????
+app.get("/urls/:id", (req, res) => {   //template changed
+  let templateVars = {
+      shortURL: "",
+      user: null,
+      state: "NOT_EXIST"
   }
+  if (req.cookies.user_id) {
+      templateVars.shortURL = req.params.id;
+      templateVars.user = users[req.cookies.user_id];
+  } 
+  templateVars.state = "NOT_EXIST"; 
+  for (var userId in urlDatabase) {
+    for (var short in urlDatabase[userId]) {
+        // exist and belongs to someone
+        if (short === req.params.id){
+          templateVars.state = "AUTHED"
+            if (userId !== req.cookies.user_id){
+              templateVars.state = "NO_AUTH"
+            }
+        }
+    }
+  }
+
+  res.render("urls_show", templateVars);
 });
 
 //update URL
