@@ -120,7 +120,7 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
-app.get("/urls/new", (req, res) => { //if statement if the user id match???
+app.get("/urls/new", (req, res) => { 
   let templateVars = {
     user: null
   };
