@@ -69,10 +69,11 @@ var users = {
 
 
 app.get("/", (req, res) => {//urls & login
-
-
-
-  res.end("Hello!");
+  if (req.cookies.user_id){
+    res.redirect("/urls");
+  } else {
+    res.redirect("/login");
+  }
 });
 
 app.get("/urls.json", (req, res) => {
@@ -140,9 +141,14 @@ app.get("/u/:shortURL", (req, res) => {
 
 //delete a shortURL
 app.get("/urls/:id/delete", (req, res) => {
+  
   var deleteshortURL = req.params.id;
+  if (req.cookies.user_id) {
   delete urlDatabase[deleteshortURL];
   res.redirect("/urls");
+  } else {
+    res.end("YOU ARE NOT LOGGED IN! GO AWAY!");
+  }
 });
 
 
@@ -175,13 +181,13 @@ app.get("/urls/:id", (req, res) => {   //template changed
 
 //update URL
 app.post("/urls/:id", (req, res) => {
-  // let templateVars = {
-  //   user: users[req.cookies.user_id],
-  // };
-
   var shortURL = req.params.id;
+  if (req.cookies.user_id) {
   urlDatabase[req.cookies.user_id][shortURL] = req.body.longURL;
-  res.redirect("/urls");
+    res.redirect("/urls");
+  } else {
+    res.end("YOU ARE NOT LOGGED IN! GO AWAY!");
+  }
 });
 
 app.get("/login", (req, res) => {
@@ -193,8 +199,6 @@ function authenticateUser(email, password) {
   var result;
   for (var key in users) {
     if ((users[key].email === email) && bcrypt.compareSync(password, users[key].password)) {
-      console.log("pw:", password)
-      console.log("userkeypw:", users[key].password)
       isAuthenticated = true;
       result = key;
       break;
@@ -207,10 +211,8 @@ function authenticateUser(email, password) {
   }
 }
 
-app.post("/login", (req, res) => { //null
+app.post("/login", (req, res) => { 
   var result = authenticateUser(req.body.email, req.body.password);
-  console.log('hash bodypw', req.body.password)
-  console.log('users', users)
   if (result) {
     res.cookie("user_id", result.id);
     res.redirect("/urls");
