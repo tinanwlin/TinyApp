@@ -11,7 +11,7 @@
 
 
     <% if (user) { %>
-      <h2 style="color:khaki">ShortURL and LongURL</h2>
+      <h2 style="color:khaki">ShortURL and Update your LongURL</h2>
       <br/>
       <% if (state === "NOT_EXIST") { %>
         <p>This shortURL does not exist</p>
@@ -19,14 +19,14 @@
           <p>This shortURL belongs to other user</p>
           <% } else if (state === "AUTHED"){ %>
             <h4>ShortURL:<%= shortURL %></h4>
-            <form method="POST" action="/urls/<%= shortURL %>">
+            <form style="display:flex;align-items:center" method="POST" action="/urls/<%= shortURL %>">
               <label>Update longURL Here</label>
               <input type="text" name="longURL" placeholder="http://"></input>
               <button type="submit">Update</button>
             </form>
       <% } %> 
       <% } else { %>
-      <p>To access this page (/urls/:id) you must log in.</p>
+      <p>To access this page (/urls/:id) you must log in or register a new account</p>
     <% } %>
 </body>
 

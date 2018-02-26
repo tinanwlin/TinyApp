@@ -1,16 +1,58 @@
+<style>
+  nav{
+    background:#baffce;
+    padding: 0 10px;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+  }
+  ul{
+    display:flex;
+  }
+  li{
+    margin:0 10px;
+    list-style:none;
+  }
 
-  <h2 style="color:cadetblue">TinyApp 🏖</h2>
+  button{
+    color:cadetblue;
+    text-decoration:none;
+    display:block;
+    text-transform:uppercase;
+  }
+  button:hover{
+    color:white;
+    background:#34696b;
+  }
+</style>
 
-  <% if(user) { %>
-    <div>Hello, <%= user.email %></div>
+
+<nav>
+  <div>
+    <h2 style="color:#34696b">TinyApp 🏖</h2>
+  </div>
+
+  <ul>
+    <% if(user) { %>
+      <li>Hello, <%= user.email %></li>
       <form method="POST" action="/logout">
         <button type="submit">Logout</button>
       </form>
-      <% } else { %>
-        <p><form method="GET" action="/login">
+    <% } else { %>
+      <li>
+        <form method="GET" action="/login">
           <button type="submit">Login</button>
-          </form></p>
-        <p><form method="GET" action="/register">
+        </form>
+      </li>
+      <li>
+        <form method="GET" action="/register">
           <button type="submit">Register</button>
-          </form></p>
-        <%  } %>
+        </form>
+      </li>
+
+      
+    <% } %>
+  </ul>
+
+</nav>
+
